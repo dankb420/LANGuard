@@ -22,16 +22,24 @@ def Main():
 
     database.Save(current_devices)
 
-    print(f"Current Devices: {len(current_devices)}")
-    print(f"Previous Devices: {len(previous_devices)}")
-    print(f"New Devices: {len(new_devices)}\n")
+    print(f"\nCurrent Devices : {len(current_devices)}")
+    print(f"Known Devices   : {len(previous_devices)}")
+    print(f"New Devices     : {len(new_devices)}\n")
 
-    print("Discovered Devices\n")
+    print("Discovered Devices")
+    print("-" * 70)
 
     for device in current_devices:
 
+        vendor_name = vendor.GetVendor(device.MAC)
+
+        status = "NEW" if device in new_devices else "KNOWN"
+
         print(
-            f"{device} | {vendor.GetVendor(device.MAC)}"
+            f"{device.IP:<16}"
+            f"{device.MAC:<20}"
+            f"{vendor_name:<30}"
+            f"{status}"
         )
 
 
