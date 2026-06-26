@@ -7,12 +7,12 @@ from pathlib import Path
 import sqlite3
 
 from device import Device
-DATABASE_PATH = Path(__file__).parent.parent / "languard.db"
+DATABASE_NAME = Path(__file__).parent.parent / "data" / "languard.db"
 class Database:
 
     def __init__(self):
 
-        self.connection = sqlite3.connect(DATABASE_PATH)
+        self.connection = sqlite3.connect(DATABASE_NAME)
 
         self.cursor = self.connection.cursor()
 

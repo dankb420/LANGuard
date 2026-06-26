@@ -11,8 +11,9 @@ class Device:
     def __init__(self, IP: str, MAC: str):
 
         self.IP = IP
+
         self.MAC = MAC
 
-    def __str__(self) -> str:
+        self.Vendor = ""
 
-        return f"{self.IP} ({self.MAC})"
+        self.Status = ""

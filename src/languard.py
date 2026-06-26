@@ -4,6 +4,12 @@ from detector import Detector
 from vendor import Vendor
 
 
+from scanner import Scanner
+from database import Database
+from detector import Detector
+from vendor import Vendor
+
+
 def RunLANGuard():
 
     scanner = Scanner()
@@ -20,28 +26,15 @@ def RunLANGuard():
 
     new_devices = detector.Detect(previous_devices, current_devices)
 
-    database.Save(current_devices)
-
-    print(f"\nCurrent Devices : {len(current_devices)}")
-    print(f"Known Devices   : {len(previous_devices)}")
-    print(f"New Devices     : {len(new_devices)}\n")
-
-    print("Discovered Devices")
-    print("-" * 70)
-
     for device in current_devices:
 
-        vendor_name = vendor.GetVendor(device.MAC)
+        device.Vendor = vendor.GetVendor(device.MAC)
 
-        status = "NEW" if device in new_devices else "KNOWN"
+        if device in new_devices:
+            device.Status = "New"
+        else:
+            device.Status = "Known"
 
-        print(
-            f"{device.IP:<16}"
-            f"{device.MAC:<20}"
-            f"{vendor_name:<30}"
-            f"{status}"
-        )
+    database.Save(current_devices)
 
-
-if __name__ == "__main__":
-    RunLANGuard()
+    return current_devices
