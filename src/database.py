@@ -27,22 +27,16 @@ class Database:
 
 
     def Save(self, devices: list[Device]):
-
-        self.cursor.execute("DELETE FROM Devices")
-
         for device in devices:
 
             self.cursor.execute(
                 """
-                INSERT INTO Devices(MAC, IP)
+                INSERT OR IGNORE INTO Devices(MAC, IP)
                 VALUES(?, ?)
                 """,
-                (device.MAC, device.IP)
+                (device.MAC, device.IP) 
             )
-
         self.connection.commit()
-
-
     def Load(self) -> list[Device]:
 
         devices = []
