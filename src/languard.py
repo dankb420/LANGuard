@@ -4,7 +4,7 @@ from detector import Detector
 from vendor import Vendor
 
 
-def Main():
+def RunLANGuard():
 
     scanner = Scanner()
 
@@ -44,4 +44,4 @@ def Main():
 
 
 if __name__ == "__main__":
-    Main()
+    RunLANGuard()
