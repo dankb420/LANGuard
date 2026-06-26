@@ -76,6 +76,10 @@ class GUI:
             columns=columns,
             show="headings"
         )
+        self.tree.tag_configure(
+            "new_device",
+            foreground="red"
+        )
         self.tree.heading("Hostname", text="Hostname")
         self.tree.heading("IP", text="IP Address")
         self.tree.heading("MAC", text="MAC Address")
@@ -121,6 +125,13 @@ class GUI:
 
         for device in devices:
 
+            status = "🟢 Known"
+            tag = ""
+
+            if device.Status == "New":
+                status = "🔴 New"
+                tag = "new_device"
+
             self.tree.insert(
                 "",
                 "end",
@@ -129,8 +140,9 @@ class GUI:
                     device.IP,
                     device.MAC,
                     device.Vendor,
-                    device.Status
-                )
+                    status
+                ),
+                tags=(tag,)
             )
 
         self.statusLabel.config(
