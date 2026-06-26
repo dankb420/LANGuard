@@ -3,10 +3,10 @@ gui.py
 
 Graphical User Interface for LANGuard.
 """
-
+import socket
+import subprocess
 import tkinter as tk
 from tkinter import ttk
-
 from languard import RunLANGuard
 
 
@@ -42,7 +42,14 @@ class GUI:
             text="Scan Network",
             command=self.Scan
         )
+        # ---------------- Network Information ---------------- #
 
+        self.networkInfo = ttk.Label(
+            self.topFrame,
+            text=f"Network: {self.GetNetworkName()}    Local IP: {self.GetLocalIP()}"
+        )
+
+        self.networkInfo.pack(side="left", padx=20)
         self.scanButton.pack(side="left")
 
         # ---------------- Status ---------------- #
@@ -57,10 +64,11 @@ class GUI:
         # ---------------- Tree ---------------- #
 
         columns = (
+            "Hostname",
             "IP",
             "MAC",
             "Vendor",
-            "Status"
+            "Status",
         )
 
         self.tree = ttk.Treeview(
@@ -68,12 +76,12 @@ class GUI:
             columns=columns,
             show="headings"
         )
-
+        self.tree.heading("Hostname", text="Hostname")
         self.tree.heading("IP", text="IP Address")
         self.tree.heading("MAC", text="MAC Address")
         self.tree.heading("Vendor", text="Vendor")
         self.tree.heading("Status", text="Status")
-
+        self.tree.column("Hostname", width=180)
         self.tree.column("IP", width=170)
         self.tree.column("MAC", width=220)
         self.tree.column("Vendor", width=300)
@@ -117,6 +125,7 @@ class GUI:
                 "",
                 "end",
                 values=(
+                    device.Hostname,
                     device.IP,
                     device.MAC,
                     device.Vendor,
@@ -134,3 +143,25 @@ class GUI:
     def Run(self):
 
         self.root.mainloop()
+    def GetLocalIP(self):
+        try:
+            return socket.gethostbyname(socket.gethostname())
+        except:
+            return "Unknown"
+
+
+    def GetNetworkName(self):
+        try:
+            output = subprocess.check_output(
+                "netsh wlan show interfaces",
+                shell=True,
+                text=True
+            )
+
+            for line in output.splitlines():
+                if "SSID" in line and "BSSID" not in line:
+                    return line.split(":")[1].strip()
+
+        except:
+            pass
+        return "Wired / Unknown"

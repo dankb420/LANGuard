@@ -2,14 +2,14 @@ from scanner import Scanner
 from database import Database
 from detector import Detector
 from vendor import Vendor
+import socket
+def GetHostname(ip):
 
+    try:
+        return socket.gethostbyaddr(ip)[0]
 
-from scanner import Scanner
-from database import Database
-from detector import Detector
-from vendor import Vendor
-
-
+    except:
+        return "Unknown"
 def RunLANGuard():
 
     scanner = Scanner()
@@ -28,6 +28,7 @@ def RunLANGuard():
 
     for device in current_devices:
 
+        device.Hostname = GetHostname(device.IP)
         device.Vendor = vendor.GetVendor(device.MAC)
 
         if device in new_devices:
